@@ -62,10 +62,8 @@ const RecommendPage = () => {
   };
 
   const handleBack = () => {
-    if (window.confirm('이전 화면으로 돌아가시겠습니까? 추천된 활동 정보는 사라지며 다시 입력해야 합니다.')) {
-      setIsRecommended(false);
-      setRecommendations([]);
-    }
+    setIsRecommended(false);
+    setRecommendations([]);
   };
 
   const handleRecommend = async () => {
@@ -84,6 +82,18 @@ const RecommendPage = () => {
     setLikedIds(data.filter((r: Recommendation) => r.liked).map((r: Recommendation) => r.activity_id));
     setIsLoading(false);
     setIsRecommended(true);
+  };
+
+  const handleReRecommend = async () => {
+    setIsLoading(true);
+    const data = await api.post('/recommendations/recommend', {
+      pref_weight: prefWeight,
+      activities_weight: activityWeight,
+      type_weight: typeWeight,
+    });
+    setRecommendations(data);
+    setLikedIds(data.filter((r: Recommendation) => r.liked).map((r: Recommendation) => r.activity_id));
+    setIsLoading(false);
   };
 
   const handleRoadmapClick = () => {
@@ -161,6 +171,9 @@ const RecommendPage = () => {
               <span className="weight-value">{typeWeight}</span>
             </div>
           </div>
+          <button className="re-recommend-btn" onClick={handleReRecommend} disabled={isLoading}>
+            {isLoading ? '추천 중...' : '다시 추천 받기'}
+          </button>
         </div>
 
         <div className="test-summary">
