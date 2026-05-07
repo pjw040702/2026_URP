@@ -67,7 +67,7 @@ const Header = () => {
               className={location.pathname === "/roadmap" ? "nav-item active" : "nav-item"}
               onClick={(e) => handleNavClick("/roadmap", e)}
             >
-              로드맵
+              활동 장바구니
             </a>
           </>
         )}
