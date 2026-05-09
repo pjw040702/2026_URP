@@ -20,19 +20,6 @@ Authorization: Bearer {access_token}
 
 ---
 
-## 페이지별 필요 API
-
-| 페이지 | 경로 | 필요 API |
-|--------|------|----------|
-| `LoginPage` | `/login` | 로그인 |
-| `SignupPage` | `/signup` | 아이디 중복 확인, 회원가입 |
-| `MyInfoPage` | `/my-info` | 유저 정보 조회/수정 |
-| `CareerTest` | `/test` | 검사 결과 저장 |
-| `RecommendPage` | `/recommend` | 추천 활동 요청, 하트 추가/삭제 |
-| `RoadmapPage` | `/roadmap` | 하트 저장 활동 조회 |
-| `PastActivitiesPage` | `/past-activities` | 활동 전체 목록 조회, 학년별 활동 조회/추가/삭제 |
-
----
 
 ## 엔드포인트 명세
 
@@ -193,8 +180,6 @@ GET /activities
 | 항목 | 내용 |  
 |------|------|
 | 인증 | 필요 |
-| Query Param | `category` (선택) — `비교과 활동` / `자격증` / `학부 연구실` |
-| Query Param | `search` (선택) — 검색어 (활동명 대상) |
 | Response | `[{ "id": 1, "title": "데이터 분석 기초 캠프", "category": "비교과 활동" }]` |
 
 ---

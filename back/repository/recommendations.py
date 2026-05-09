@@ -142,6 +142,20 @@ class RecommendationRepository:
                 for a, s in zip(valid_activities, scores)
             ]
         print(f"DEBUG: 필터링 통과한 활동 수: {len(results)}")
+
+        # 선호 문장에 자격증 키워드가 있으면 certification 카테고리 점수 부스팅
+        CERT_KEYWORDS = ["자격증", "면허", "자격시험", "자격"]
+        pref_text = user_orm.preference or ""
+        wants_cert = any(kw in pref_text for kw in CERT_KEYWORDS)
+        if wants_cert:
+            CERT_BOOST = 1.2
+            results = [
+                {**r, "fitness_score": r["fitness_score"] * CERT_BOOST}
+                if activity_by_id.get(r["activity_id"]) and activity_by_id[r["activity_id"]].category == "certification"
+                else r
+                for r in results
+            ]
+
         results_sorted = sorted(results, key=lambda x: x['fitness_score'], reverse=True)
         seen_cert_details = set()
         top_5_results = []
@@ -154,6 +168,25 @@ class RecommendationRepository:
                     continue
                 seen_cert_details.add(activity.detail)
             top_5_results.append(r)
+
+        # 자격증 선호지만 top5에 자격증이 하나도 없으면 최고점 자격증을 마지막 슬롯에 삽입
+        if wants_cert and top_5_results:
+            has_cert_in_top5 = any(
+                activity_by_id.get(r["activity_id"]) and activity_by_id[r["activity_id"]].category == "certification"
+                for r in top_5_results
+            )
+            if not has_cert_in_top5:
+                top5_ids = {r["activity_id"] for r in top_5_results}
+                cert_fallback = next(
+                    (r for r in results_sorted
+                     if r["activity_id"] not in top5_ids
+                     and activity_by_id.get(r["activity_id"])
+                     and activity_by_id[r["activity_id"]].category == "certification"),
+                    None
+                )
+                if cert_fallback:
+                    top_5_results[-1] = cert_fallback
+
         print(f"DEBUG: Top 5 활동 IDs: {[r['activity_id'] for r in top_5_results]}")
         # likes true인 애들은 그대로 두자
         keep_query = select(Recommendation.activity_id).where(
