@@ -9,11 +9,30 @@ const Header = () => {
   const isLoggedIn = !!localStorage.getItem('token');
 
   const handleLogout = () => {
+    // 추천 결과가 활성화된 상태에서만 경고창 표시
+    if (location.pathname === '/recommend' && (window as any).isRecommendationResultsActive) {
+      if (!window.confirm('로그아웃 하시겠습니까? 추천된 활동 정보는 사라지며 다시 입력해야 합니다.')) {
+        return;
+      }
+    }
     // 로그아웃 로직: 토큰 삭제 후 로그인 페이지로 이동
     localStorage.removeItem('token');
     console.log('로그아웃');
     alert('로그아웃 되었습니다.');
     navigate('/login');
+  };
+
+  const handleNavClick = (to: string, e?: React.MouseEvent) => {
+    if (e) e.preventDefault();
+    
+    // 추천 결과가 활성화된 상태에서만 경고창 표시
+    if (location.pathname === '/recommend' && (window as any).isRecommendationResultsActive) {
+      if (!window.confirm('페이지를 이동하시겠습니까? 추천된 활동 정보는 사라지며 다시 입력해야 합니다.')) {
+        return;
+      }
+    }
+    
+    navigate(to);
   };
 
   return (
@@ -22,10 +41,34 @@ const Header = () => {
       <nav className="header-left-nav">
         {isLoggedIn && (
           <>
-            <NavLink to="/past-activities" className={({ isActive }) => isActive ? "nav-item active" : "nav-item"}>이전 활동</NavLink>
-            <NavLink to="/" className={({ isActive }) => isActive ? "nav-item active" : "nav-item"}>HOME</NavLink>
-            <NavLink to="/recommend" className={({ isActive }) => isActive ? "nav-item active" : "nav-item"}>활동 추천</NavLink>
-            <NavLink to="/roadmap" className={({ isActive }) => isActive ? "nav-item active" : "nav-item"}>로드맵</NavLink>
+            <a 
+              href="/past-activities" 
+              className={location.pathname === "/past-activities" ? "nav-item active" : "nav-item"}
+              onClick={(e) => handleNavClick("/past-activities", e)}
+            >
+              이전 활동
+            </a>
+            <a 
+              href="/" 
+              className={location.pathname === "/" ? "nav-item active" : "nav-item"}
+              onClick={(e) => handleNavClick("/", e)}
+            >
+              HOME
+            </a>
+            <a 
+              href="/recommend" 
+              className={location.pathname === "/recommend" ? "nav-item active" : "nav-item"}
+              onClick={(e) => handleNavClick("/recommend", e)}
+            >
+              활동 추천
+            </a>
+            <a 
+              href="/roadmap" 
+              className={location.pathname === "/roadmap" ? "nav-item active" : "nav-item"}
+              onClick={(e) => handleNavClick("/roadmap", e)}
+            >
+              활동 장바구니
+            </a>
           </>
         )}
       </nav>
@@ -34,7 +77,7 @@ const Header = () => {
         {isLoggedIn ? (
           <>
             <button className="logout-btn" onClick={handleLogout}>로그아웃</button>
-            <button className="profile-icon-btn" onClick={() => navigate('/my-info')} title="내 정보 보기">
+            <button className="profile-icon-btn" onClick={() => handleNavClick('/my-info')} title="내 정보 보기">
               {/* 프로필 아이콘 */}
               <div className="user-icon-placeholder">🙂</div>
             </button>

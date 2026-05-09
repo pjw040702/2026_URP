@@ -228,10 +228,85 @@
 }
 
 .result-card, .no-result-card {
-  padding: 20px;
-  background: #f8f9fa;
-  border-radius: 10px;
+  padding: 30px;
+  background: white;
+  border-radius: 20px;
   text-align: center;
+  border: 1px solid #e2e8f0;
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+}
+
+.chart-wrapper {
+  width: 100%;
+  margin-bottom: 30px;
+  display: flex;
+  justify-content: center;
+}
+
+.type-chart-container {
+  width: 100%;
+  overflow-x: auto;
+  padding: 20px 0;
+  display: flex;
+  justify-content: center;
+}
+
+.type-chart-container::-webkit-scrollbar {
+  height: 6px;
+}
+
+.type-chart-container::-webkit-scrollbar-track {
+  background: #f1f5f9;
+}
+
+.type-chart-container::-webkit-scrollbar-thumb {
+  background: #cbd5e1;
+  border-radius: 3px;
+}
+
+.chart-bar-group text {
+  font-family: inherit;
+  pointer-events: none;
+}
+
+.bar-value-text {
+  font-size: 13px;
+  font-weight: 800;
+  fill: #334155;
+  text-anchor: middle;
+}
+
+.bar-label-text {
+  font-size: 12px;
+  font-weight: 700;
+  fill: #64748b;
+  text-anchor: middle;
+}
+
+.data-bar {
+  transition: height 0.3s ease-out, y 0.3s ease-out;
+  cursor: pointer;
+}
+
+.data-bar:hover {
+  fill: #2563eb;
+}
+
+.no-result-text {
+  color: #64748b;
+  margin-bottom: 20px;
+  font-weight: 500;
+}
+
+.retest-btn.primary {
+  background-color: #3b82f6;
+  color: white;
+  border: none;
+  padding: 12px 30px;
+}
+
+.retest-btn.primary:hover {
+  background-color: #2563eb;
 }
 
 .button-group {

@@ -21,7 +21,6 @@ const RecommendPage = () => {
   const [recommendations, setRecommendations] = useState<Recommendation[]>([]);
   const [likedIds, setLikedIds] = useState<number[]>([]);
   const [isLoading, setIsLoading] = useState(false);
-  const [initialLoading, setInitialLoading] = useState(true);
 
   const [prefWeight, setPrefWeight] = useState(50);
   const [activityWeight, setActivityWeight] = useState(50);
@@ -34,14 +33,13 @@ const RecommendPage = () => {
   ];
 
   useEffect(() => {
-    api.get('/recommendations/get').then((data: Recommendation[]) => {
-      if (data && data.length > 0) {
-        setRecommendations(data);
-        setLikedIds(data.filter(r => r.liked).map(r => r.activity_id));
-        setIsRecommended(true);
-      }
-    }).finally(() => setInitialLoading(false));
-  }, []);
+    // 추천 결과가 나왔을 때만 내비게이션 경고를 활성화하기 위한 전역 플래그
+    (window as any).isRecommendationResultsActive = isRecommended;
+    
+    return () => {
+      (window as any).isRecommendationResultsActive = false;
+    };
+  }, [isRecommended]);
 
   useEffect(() => {
     const handleBeforeUnload = (e: BeforeUnloadEvent) => {
@@ -64,10 +62,8 @@ const RecommendPage = () => {
   };
 
   const handleBack = () => {
-    if (window.confirm('이전 화면으로 돌아가시겠습니까? 추천된 활동 정보는 사라지며 다시 입력해야 합니다.')) {
-      setIsRecommended(false);
-      setRecommendations([]);
-    }
+    setIsRecommended(false);
+    setRecommendations([]);
   };
 
   const handleRecommend = async () => {
@@ -88,7 +84,27 @@ const RecommendPage = () => {
     setIsRecommended(true);
   };
 
-  if (initialLoading) return <Loading />;
+  const handleReRecommend = async () => {
+    setIsLoading(true);
+    const data = await api.post('/recommendations/recommend', {
+      pref_weight: prefWeight,
+      activities_weight: activityWeight,
+      type_weight: typeWeight,
+    });
+    setRecommendations(data);
+    setLikedIds(data.filter((r: Recommendation) => r.liked).map((r: Recommendation) => r.activity_id));
+    setIsLoading(false);
+  };
+
+  const handleRoadmapClick = () => {
+    if (isRecommended) {
+      if (window.confirm('다른 페이지로 이동하시겠습니까? 추천된 활동 정보는 사라지며 다시 입력해야 합니다.')) {
+        navigate('/roadmap');
+      }
+    } else {
+      navigate('/roadmap');
+    }
+  };
 
   if (!isRecommended) {
     return (
@@ -96,7 +112,7 @@ const RecommendPage = () => {
         {isLoading && <Loading />}
         <div className="recommend-header">
           <h2>맞춤 활동 추천</h2>
-          <p className="recommend-subtitle">당신이 관심 있는 활동이나 목표를 한 문장으로 적어주세요.</p>
+          <p className="recommend-subtitle">관심 있는 활동이나 목표를 아래의 예시 키워드를 참고하여 적어주세요.</p>
         </div>
 
         <div className="input-section">
@@ -155,6 +171,9 @@ const RecommendPage = () => {
               <span className="weight-value">{typeWeight}</span>
             </div>
           </div>
+          <button className="re-recommend-btn" onClick={handleReRecommend} disabled={isLoading}>
+            {isLoading ? '추천 중...' : '다시 추천 받기'}
+          </button>
         </div>
 
         <div className="test-summary">
@@ -188,7 +207,7 @@ const RecommendPage = () => {
         ))}
       </div>
 
-      <button className="roadmap-nav-btn" onClick={() => navigate('/roadmap')}>
+      <button className="roadmap-nav-btn" onClick={handleRoadmapClick}>
         나만의 로드맵 확인하기
       </button>
     </div>
