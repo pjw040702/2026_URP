@@ -248,7 +248,7 @@ function CareerTest() {
       {isSubmitting && <Loading />}
       <div style={{ position: 'sticky', top: '70px', zIndex: 100, backgroundColor: 'white', padding: '15px', borderBottom: '1px solid #d1dee8' }}>
         <div style={{ maxWidth: '700px', margin: '0 auto' }}>
-          <div style={{ display: 'flex', justifycontent: 'space-between', marginBottom: '8px', fontSize: '0.85rem' }}>
+          <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '8px', fontSize: '0.85rem' }}>
             <strong>검사 진행률</strong>
             <span>{progress}%</span>
           </div>
