@@ -63,9 +63,11 @@ const RoadmapPage = () => {
                   <div className="roadmap-reason">
                     <strong>추천 이유:</strong> {activity.reason_for_recommendation}
                   </div>
-                  <a href={activity.source_url} target="_blank" rel="noopener noreferrer" className="roadmap-link-btn">
-                    활동 바로가기 ↗
-                  </a>
+                  {activity.source_url && (
+                    <a href={activity.source_url} target="_blank" rel="noopener noreferrer" className="roadmap-link-btn">
+                      활동 바로가기 ↗
+                    </a>
+                  )}
                 </div>
                 <button
                   className="heart-cancel-btn"

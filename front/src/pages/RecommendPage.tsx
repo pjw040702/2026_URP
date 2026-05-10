@@ -1,4 +1,4 @@
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useLocation } from 'react-router-dom';
 import { useState, useEffect } from 'react';
 import { api } from '../api';
 import Loading from '../components/Loading';
@@ -14,7 +14,7 @@ interface Recommendation {
   liked: boolean;
 }
 
-const RecommendPage = () => {
+const RecommendPage = ({ forceInputView = false }: { forceInputView?: boolean }) => {
   const navigate = useNavigate();
   const [isRecommended, setIsRecommended] = useState(false);
   const [preferredSentence, setPreferredSentence] = useState('');
@@ -31,6 +31,12 @@ const RecommendPage = () => {
     '기초과학연구', '바이오/제약', '신소재/에너지', '건축', '인턴/현장실습',
     '공모전', '경진대회', '학술연구', '창업준비', '진로탐색'
   ];
+
+  useEffect(() => {
+    if (forceInputView) {
+      setIsRecommended(false);
+    }
+  }, [forceInputView]);
 
   useEffect(() => {
     // 추천 결과가 나왔을 때만 내비게이션 경고를 활성화하기 위한 전역 플래그
@@ -62,8 +68,7 @@ const RecommendPage = () => {
   };
 
   const handleBack = () => {
-    setIsRecommended(false);
-    setRecommendations([]);
+    navigate('/preference');
   };
 
   const handleRecommend = async () => {
@@ -72,19 +77,39 @@ const RecommendPage = () => {
       return;
     }
     setIsLoading(true);
-    await api.post('/users/me/preference', { preference: preferredSentence });
-    const data = await api.post('/recommendations/recommend', {
-      pref_weight: prefWeight,
-      activities_weight: activityWeight,
-      type_weight: typeWeight,
-    });
-    setRecommendations(data);
-    setLikedIds(data.filter((r: Recommendation) => r.liked).map((r: Recommendation) => r.activity_id));
-    setIsLoading(false);
-    setIsRecommended(true);
+    try {
+      await api.post('/users/me/preference', { preference: preferredSentence });
+      const data = await api.post('/recommendations/recommend', {
+        pref_weight: prefWeight,
+        activities_weight: activityWeight,
+        type_weight: typeWeight,
+      });
+      setRecommendations(data);
+      setLikedIds(data.filter((r: Recommendation) => r.liked).map((r: Recommendation) => r.activity_id));
+      setIsRecommended(true);
+      if (forceInputView) {
+        navigate('/recommend', { state: { recommendations: data, preferredSentence, likedIds: data.filter((r: Recommendation) => r.liked).map((r: Recommendation) => r.activity_id) } });
+      }
+    } catch (e) {
+      console.error(e);
+      alert('추천 중 오류가 발생했습니다.');
+    } finally {
+      setIsLoading(false);
+    }
   };
 
+  const location = useLocation();
+  useEffect(() => {
+    if (location.state?.recommendations && !forceInputView) {
+      setRecommendations(location.state.recommendations);
+      setPreferredSentence(location.state.preferredSentence);
+      setLikedIds(location.state.likedIds);
+      setIsRecommended(true);
+    }
+  }, [location.state, forceInputView]);
+
   const handleReRecommend = async () => {
+// ... existing handleReRecommend
     setIsLoading(true);
     const data = await api.post('/recommendations/recommend', {
       pref_weight: prefWeight,
@@ -193,9 +218,11 @@ const RecommendPage = () => {
             </div>
 
             <div className="card-actions">
-              <a href={item.source_url} target="_blank" rel="noopener noreferrer" className="link-btn">
-                상세보기
-              </a>
+              {item.source_url && (
+                <a href={item.source_url} target="_blank" rel="noopener noreferrer" className="link-btn">
+                  상세보기
+                </a>
+              )}
               <button
                 className={`heart-btn ${likedIds.includes(item.activity_id) ? 'active' : ''}`}
                 onClick={() => toggleHeart(item.activity_id)}
@@ -208,7 +235,7 @@ const RecommendPage = () => {
       </div>
 
       <button className="roadmap-nav-btn" onClick={handleRoadmapClick}>
-        나만의 로드맵 확인하기
+        나만의 활동 장바구니 확인하기
       </button>
     </div>
   );

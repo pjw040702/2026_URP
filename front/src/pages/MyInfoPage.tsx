@@ -215,8 +215,8 @@ const MyInfoPage = () => {
               </div>
             ) : (
               <div className="no-result-card">
-                <div className="chart-placeholder">[유형 분석 차트]</div>
-                <p className="no-result-text">유형 분석 정보가 없습니다. 검사를 실시하세요.</p>
+                <div className="chart-placeholder">[능력 검사 차트]</div>
+                <p className="no-result-text">능력 검사 정보가 없습니다. 검사를 실시하세요.</p>
                 <button onClick={() => navigate('/test')} className="retest-btn primary">검사하기</button>
               </div>
             )}

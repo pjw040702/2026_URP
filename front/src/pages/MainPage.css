@@ -3,19 +3,19 @@
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  min-height: calc(100vh - 70px); /* 헤더 높이 제외 */
+  min-height: calc(100vh - 150px);
   text-align: center;
-  background-color: #fff;
+  background-color: transparent;
 }
 
 .main-logo-section {
   width: 100%;
-  margin-bottom: 40px;
+  margin-bottom: 30px;
 }
 
 .home-main-logo {
-  width: 80%; /* Increased from 50% to make it significantly larger */
-  max-width: 1000px;
+  width: 40%; 
+  max-width: 450px;
   height: auto;
 }
 
