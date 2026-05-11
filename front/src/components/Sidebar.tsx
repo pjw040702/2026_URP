@@ -13,20 +13,39 @@ const Sidebar = () => {
 
   const isLoggedIn = !!localStorage.getItem('token');
 
-  useEffect(() => {
-    if (isLoggedIn) {
-      Promise.all([
-        api.get('/users/me'),
-        api.get('/users/me/past-activities'),
-      ]).then(([userData, pastData]) => {
-        // pastData가 존재하면(null이 아니면) 기록을 시도한 것으로 간주하여 통과 허용
-        const hasPast = !!pastData; 
-        setUserStatus({
-          hasTestResult: userData.has_test_result,
-          hasPastActivities: hasPast,
-        });
+  const fetchStatus = () => {
+    if (!isLoggedIn) return;
+    Promise.all([
+      api.get('/users/me'),
+      api.get('/users/me/past-activities'),
+    ]).then(([userData, pastData]) => {
+      // pastData 내부에 실제 기록(배열의 원소)이 하나라도 있는지 확인
+      const hasActualPast = !!(
+        pastData && (
+          (pastData.grade1?.length || 0) > 0 ||
+          (pastData.grade2?.length || 0) > 0 ||
+          (pastData.grade3?.length || 0) > 0 ||
+          (pastData.grade4?.length || 0) > 0
+        )
+      );
+
+      setUserStatus({
+        hasTestResult: !!userData.has_test_result,
+        hasPastActivities: hasActualPast,
       });
-    }
+    }).catch(err => console.error('Status fetch error:', err));
+  };
+
+  useEffect(() => {
+    fetchStatus();
+    
+    // 활동 저장 및 검사 완료 시 Sidebar 업데이트를 위한 이벤트 리스너
+    window.addEventListener('activitiesSaved', fetchStatus);
+    window.addEventListener('testCompleted', fetchStatus);
+    return () => {
+      window.removeEventListener('activitiesSaved', fetchStatus);
+      window.removeEventListener('testCompleted', fetchStatus);
+    };
   }, [isLoggedIn, location.pathname]);
 
   const handleNavClick = (to: string, e: React.MouseEvent, disabled?: boolean, msg?: string) => {

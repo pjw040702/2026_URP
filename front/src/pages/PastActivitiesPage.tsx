@@ -86,6 +86,7 @@ const PastActivitiesPage = () => {
       grade4: gradeActivities[4].map(a => a.activity_id),
     });
     alert('활동 기록이 저장되었습니다.');
+    window.dispatchEvent(new CustomEvent('activitiesSaved'));
   };
 
   if (loading) return <Loading />;

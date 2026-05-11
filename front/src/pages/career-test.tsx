@@ -185,6 +185,7 @@ function CareerTest() {
         setResultUrl(res.data.RESULT.url);
         window.scrollTo({ top: 0, behavior: 'smooth' });
         await api.post('/users/me/test-result', payload);
+        window.dispatchEvent(new CustomEvent('testCompleted'));
       } else {
         alert(`실패 이유: ${res.data?.ERROR_REASON || JSON.stringify(res.data)}`);
       }
