@@ -3,10 +3,13 @@ import { useState } from 'react';
 import ProfileModal from './ProfileModal';
 import './TopBar.css';
 
-const TopBar = () => {
+interface TopBarProps {
+  onProfileClick: () => void;
+}
+
+const TopBar = ({ onProfileClick }: TopBarProps) => {
   const navigate = useNavigate();
   const location = useLocation();
-  const [isProfileModalOpen, setIsProfileModalOpen] = useState(false);
 
   const isLoggedIn = !!localStorage.getItem('token');
 
@@ -18,8 +21,7 @@ const TopBar = () => {
     }
     localStorage.removeItem('token');
     alert('로그아웃 되었습니다.');
-    setIsProfileModalOpen(false);
-    navigate('/login');
+    navigate('/');
   };
 
   return (
@@ -36,7 +38,7 @@ const TopBar = () => {
             </button>
             <button 
               className="profile-icon-btn" 
-              onClick={() => setIsProfileModalOpen(true)}
+              onClick={onProfileClick}
               title="내 정보 보기"
             >
               <div className="user-icon-placeholder">🙂</div>
@@ -52,11 +54,6 @@ const TopBar = () => {
           </>
         )}
       </div>
-
-      <ProfileModal 
-        isOpen={isProfileModalOpen} 
-        onClose={() => setIsProfileModalOpen(false)}
-      />
     </div>
   );
 };

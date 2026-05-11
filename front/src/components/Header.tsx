@@ -15,11 +15,11 @@ const Header = () => {
         return;
       }
     }
-    // 로그아웃 로직: 토큰 삭제 후 로그인 페이지로 이동
+    // 로그아웃 로직: 토큰 삭제 후 메인 페이지로 이동
     localStorage.removeItem('token');
     console.log('로그아웃');
     alert('로그아웃 되었습니다.');
-    navigate('/login');
+    navigate('/');
   };
 
   const handleNavClick = (to: string, e?: React.MouseEvent) => {
