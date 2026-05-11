@@ -208,7 +208,7 @@ const MyInfoPage = () => {
                   >
                     결과 리포트 보기
                   </button>
-                  <button className="retest-btn" onClick={() => navigate('/test')}>
+                  <button className="retest-btn" onClick={() => navigate('/test', { state: { restart: true } })}>
                     다시 검사하기
                   </button>
                 </div>
@@ -217,7 +217,7 @@ const MyInfoPage = () => {
               <div className="no-result-card">
                 <div className="chart-placeholder">[능력 검사 차트]</div>
                 <p className="no-result-text">능력 검사 정보가 없습니다. 검사를 실시하세요.</p>
-                <button onClick={() => navigate('/test')} className="retest-btn primary">검사하기</button>
+                <button onClick={() => navigate('/test', { state: { restart: true } })} className="retest-btn primary">검사하기</button>
               </div>
             )}
           </div>

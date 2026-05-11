@@ -145,7 +145,7 @@ const AbilityResult = () => {
             <div className="chart-placeholder" style={{ fontSize: '48px', marginBottom: '20px' }}>📊</div>
             <p className="no-result-text" style={{ color: '#64748b', marginBottom: '24px' }}>유형 분석 정보가 없습니다. 검사를 실시하세요.</p>
             <button 
-              onClick={() => navigate('/test', { state: { startNow: true } })} 
+              onClick={() => navigate('/test', { state: { restart: true } })} 
               className="retest-btn primary"
               style={{ padding: '14px 32px', background: '#3b82f6', color: 'white', border: 'none', borderRadius: '12px', cursor: 'pointer', fontWeight: 'bold' }}
             >

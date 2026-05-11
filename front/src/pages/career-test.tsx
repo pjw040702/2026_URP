@@ -60,10 +60,9 @@ function CareerTest() {
   const API_KEY = '7e5af4e6c5fbe064f07ba221a72feb8d';
 
   useEffect(() => {
-    if (location.state?.restart || location.state?.startNow) {
+    if (location.state?.restart) {
       setShowResult(false);
-      setTestStarted(location.state?.restart ? false : true);
-      if (location.state?.startNow) loadQuestions();
+      setTestStarted(false);
     } else {
       setShowResult(true);
     }

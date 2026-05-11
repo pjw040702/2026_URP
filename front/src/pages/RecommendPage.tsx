@@ -29,7 +29,7 @@ const RecommendPage = ({ forceInputView = false }: { forceInputView?: boolean })
   const keywords = [
     '인공지능(AI)', '데이터 분석', '반도체', '코딩', '자율주행',
     '기초과학연구', '바이오/제약', '신소재/에너지', '건축', '인턴/현장실습',
-    '공모전', '경진대회', '학술연구', '창업준비', '진로탐색'
+    '공모전', '경진대회', '학술연구', '창업준비', '진로탐색', 'etc'
   ];
 
   useEffect(() => {
