@@ -17,10 +17,6 @@ load_dotenv(Path(__file__).resolve().parents[2] / ".env")
 LLM_KEY = os.getenv("LLM_KEY")
 from concurrent.futures import ThreadPoolExecutor
 
-from google.cloud import aiplatform
-import vertexai
-from vertexai.generative_models import GenerativeModel
-
 def update_year():
     session = SessionFactory()
     
@@ -73,7 +69,7 @@ def update_year():
     finally:
         session.close()
 
-def call_llm(self, prompt: str): # 추천 이유 생성하는 용도
+def call_llm(self, prompt: str):
         
     try:
         client = genai.Client(vertexai=True, project="project-06786059-977e-4238-b0f", location="asia-northeast3")
