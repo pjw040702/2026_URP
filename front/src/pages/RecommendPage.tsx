@@ -79,6 +79,7 @@ const RecommendPage = ({ forceInputView = false }: { forceInputView?: boolean })
     setIsLoading(true);
     try {
       await api.post('/users/me/preference', { preference: preferredSentence });
+      localStorage.setItem('hasPreference', 'true');
       const data = await api.post('/recommendations/recommend', {
         pref_weight: prefWeight,
         activities_weight: activityWeight,
@@ -86,6 +87,7 @@ const RecommendPage = ({ forceInputView = false }: { forceInputView?: boolean })
       });
       setRecommendations(data);
       setLikedIds(data.filter((r: Recommendation) => r.liked).map((r: Recommendation) => r.activity_id));
+      localStorage.setItem('hasRecommendation', 'true');
       setIsRecommended(true);
       if (forceInputView) {
         navigate('/recommend', { state: { recommendations: data, preferredSentence, likedIds: data.filter((r: Recommendation) => r.liked).map((r: Recommendation) => r.activity_id) } });
@@ -108,17 +110,8 @@ const RecommendPage = ({ forceInputView = false }: { forceInputView?: boolean })
     }
   }, [location.state, forceInputView]);
 
-  const handleReRecommend = async () => {
-// ... existing handleReRecommend
-    setIsLoading(true);
-    const data = await api.post('/recommendations/recommend', {
-      pref_weight: prefWeight,
-      activities_weight: activityWeight,
-      type_weight: typeWeight,
-    });
-    setRecommendations(data);
-    setLikedIds(data.filter((r: Recommendation) => r.liked).map((r: Recommendation) => r.activity_id));
-    setIsLoading(false);
+  const handleReRecommend = () => {
+    setIsRecommended(false);
   };
 
   const handleRoadmapClick = () => {
@@ -158,6 +151,31 @@ const RecommendPage = ({ forceInputView = false }: { forceInputView?: boolean })
               />
               <div className="char-count">{preferredSentence.length}/200</div>
             </div>
+
+            <div className="weight-control-container">
+              <h3 className="weight-control-title">반영 비율 조정</h3>
+              <div className="weight-sliders">
+                <div className="weight-slider-item">
+                  <label>선호 문장</label>
+                  <input type="range" min="1" max="100" value={prefWeight}
+                    onChange={(e) => setPrefWeight(Number(e.target.value))} />
+                  <span className="weight-value">{prefWeight}</span>
+                </div>
+                <div className="weight-slider-item">
+                  <label>과거 활동</label>
+                  <input type="range" min="1" max="100" value={activityWeight}
+                    onChange={(e) => setActivityWeight(Number(e.target.value))} />
+                  <span className="weight-value">{activityWeight}</span>
+                </div>
+                <div className="weight-slider-item">
+                  <label>유형 결과</label>
+                  <input type="range" min="1" max="100" value={typeWeight}
+                    onChange={(e) => setTypeWeight(Number(e.target.value))} />
+                  <span className="weight-value">{typeWeight}</span>
+                </div>
+              </div>
+            </div>
+
             <button className="get-recommend-btn" onClick={handleRecommend} disabled={isLoading}>
               {isLoading ? '추천 중...' : '활동 추천 받기'}
             </button>
@@ -174,32 +192,32 @@ const RecommendPage = ({ forceInputView = false }: { forceInputView?: boolean })
         <button className="back-btn" onClick={handleBack}>← 다시 입력하기</button>
         <h2>맞춤 활동 추천 결과</h2>
 
-        <div className="weight-control-container">
+        <div className="weight-control-container weight-control-disabled">
           <h3 className="weight-control-title">반영 비율 조정</h3>
           <div className="weight-sliders">
             <div className="weight-slider-item">
               <label>선호 문장</label>
-              <input type="range" min="1" max="100" value={prefWeight}
+              <input type="range" min="1" max="100" value={prefWeight} disabled
                 onChange={(e) => setPrefWeight(Number(e.target.value))} />
               <span className="weight-value">{prefWeight}</span>
             </div>
             <div className="weight-slider-item">
               <label>과거 활동</label>
-              <input type="range" min="1" max="100" value={activityWeight}
+              <input type="range" min="1" max="100" value={activityWeight} disabled
                 onChange={(e) => setActivityWeight(Number(e.target.value))} />
               <span className="weight-value">{activityWeight}</span>
             </div>
             <div className="weight-slider-item">
               <label>유형 결과</label>
-              <input type="range" min="1" max="100" value={typeWeight}
+              <input type="range" min="1" max="100" value={typeWeight} disabled
                 onChange={(e) => setTypeWeight(Number(e.target.value))} />
               <span className="weight-value">{typeWeight}</span>
             </div>
           </div>
-          <button className="re-recommend-btn" onClick={handleReRecommend} disabled={isLoading}>
-            {isLoading ? '추천 중...' : '다시 추천 받기'}
-          </button>
         </div>
+        <button className="re-recommend-btn" onClick={handleReRecommend}>
+          다시 추천 받기
+        </button>
 
         <div className="test-summary">
           <p>입력하신 문장: <strong>"{preferredSentence}"</strong></p>

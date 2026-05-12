@@ -96,6 +96,59 @@ const PastActivitiesPage = () => {
       <div className="activities-layout">
         <div className="left-section">
           <div className="section-header">
+            <div className="grade-selector">
+              {[1, 2, 3, 4].map(grade => (
+                <button
+                  key={grade}
+                  className={`grade-btn ${selectedGrade === grade ? 'active' : ''}`}
+                  onClick={() => setSelectedGrade(grade)}
+                >
+                  {grade}학년
+                </button>
+              ))}
+            </div>
+          </div>
+
+          <div className="selected-activities-area">
+            <div className="grade-info-header">
+              <h3>{selectedGrade}학년 참여 활동</h3>
+              <span className="count-badge">{gradeActivities[selectedGrade]?.length || 0}</span>
+            </div>
+
+            <div className="added-activities-list">
+              {gradeActivities[selectedGrade]?.length > 0 ? (
+                gradeActivities[selectedGrade].map(activity => (
+                  <div key={activity.activity_id} className="added-activity-item">
+                    <div className="added-item-info">
+                      <span className="item-category">[{activity.category}]</span>
+                      <span className="item-title">{activity.title}</span>
+                    </div>
+                    <button
+                      className="remove-btn"
+                      onClick={() => removeActivityFromGrade(activity.activity_id)}
+                    >
+                      ✕
+                    </button>
+                  </div>
+                ))
+              ) : (
+                <div className="empty-state">
+                  <p>아직 추가된 활동이 없습니다.</p>
+                  <p className="hint">오른쪽 리스트에서 활동을 선택하여 추가하세요.</p>
+                </div>
+              )}
+            </div>
+
+            <div className="save-action-area">
+              <button className="final-save-btn" onClick={handleSave}>
+                전체 활동 저장하기
+              </button>
+            </div>
+          </div>
+        </div>
+
+        <div className="right-section">
+          <div className="section-header">
             <div className="header-top-group">
               <div className="category-filters">
                 {categories.map(cat => (
@@ -141,59 +194,6 @@ const PastActivitiesPage = () => {
               ) : (
                 <div className="no-results">검색 결과가 없습니다.</div>
               )}
-            </div>
-          </div>
-        </div>
-
-        <div className="right-section">
-          <div className="section-header">
-            <div className="grade-selector">
-              {[1, 2, 3, 4].map(grade => (
-                <button
-                  key={grade}
-                  className={`grade-btn ${selectedGrade === grade ? 'active' : ''}`}
-                  onClick={() => setSelectedGrade(grade)}
-                >
-                  {grade}학년
-                </button>
-              ))}
-            </div>
-          </div>
-
-          <div className="selected-activities-area">
-            <div className="grade-info-header">
-              <h3>{selectedGrade}학년 참여 활동</h3>
-              <span className="count-badge">{gradeActivities[selectedGrade]?.length || 0}</span>
-            </div>
-
-            <div className="added-activities-list">
-              {gradeActivities[selectedGrade]?.length > 0 ? (
-                gradeActivities[selectedGrade].map(activity => (
-                  <div key={activity.activity_id} className="added-activity-item">
-                    <div className="added-item-info">
-                      <span className="item-category">[{activity.category}]</span>
-                      <span className="item-title">{activity.title}</span>
-                    </div>
-                    <button
-                      className="remove-btn"
-                      onClick={() => removeActivityFromGrade(activity.activity_id)}
-                    >
-                      ✕
-                    </button>
-                  </div>
-                ))
-              ) : (
-                <div className="empty-state">
-                  <p>아직 추가된 활동이 없습니다.</p>
-                  <p className="hint">왼쪽 리스트에서 활동을 선택하여 추가하세요.</p>
-                </div>
-              )}
-            </div>
-
-            <div className="save-action-area">
-              <button className="final-save-btn" onClick={handleSave}>
-                전체 활동 저장하기
-              </button>
             </div>
           </div>
         </div>

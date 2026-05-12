@@ -20,6 +20,8 @@ const TopBar = ({ onProfileClick }: TopBarProps) => {
       }
     }
     localStorage.removeItem('token');
+    localStorage.removeItem('hasPreference');
+    localStorage.removeItem('hasRecommendation');
     alert('로그아웃 되었습니다.');
     navigate('/');
   };

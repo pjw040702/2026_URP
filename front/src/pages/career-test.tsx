@@ -246,7 +246,7 @@ function CareerTest() {
   return (
     <div style={{ backgroundColor: '#f4f7f9', minHeight: '100vh', paddingBottom: '60px' }}>
       {isSubmitting && <Loading />}
-      <div style={{ position: 'sticky', top: '70px', zIndex: 100, backgroundColor: 'white', padding: '15px', borderBottom: '1px solid #d1dee8' }}>
+      <div style={{ position: 'sticky', top: '0', zIndex: 100, backgroundColor: 'white', padding: '15px', borderBottom: '1px solid #d1dee8' }}>
         <div style={{ maxWidth: '700px', margin: '0 auto' }}>
           <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '8px', fontSize: '0.85rem' }}>
             <strong>검사 진행률</strong>
