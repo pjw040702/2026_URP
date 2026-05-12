@@ -50,7 +50,7 @@ class RecommendationRepository:
                 return "에러: GCP_CREDENTIALS 환경 변수가 설정되지 않았습니다."
 
             creds_info = json.loads(creds_json)
-            credentials = service_account.Credentials.from_service_account_info(creds_info)
+            
             scopes = ['https://www.googleapis.com/auth/cloud-platform']
             credentials = service_account.Credentials.from_service_account_info(
                 creds_info, 
