@@ -51,6 +51,11 @@ class RecommendationRepository:
 
             creds_info = json.loads(creds_json)
             credentials = service_account.Credentials.from_service_account_info(creds_info)
+            scopes = ['https://www.googleapis.com/auth/cloud-platform']
+            credentials = service_account.Credentials.from_service_account_info(
+                creds_info, 
+                scopes=scopes  # 이 부분이 누락되면 invalid_scope 에러가 납니다.
+            )
             client = Client(
                 vertexai=True, 
                 project=creds_info.get("project_id"), 
