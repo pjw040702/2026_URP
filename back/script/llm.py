@@ -16,6 +16,7 @@ from dotenv import load_dotenv
 load_dotenv(Path(__file__).resolve().parents[2] / ".env")
 LLM_KEY = os.getenv("LLM_KEY")
 from concurrent.futures import ThreadPoolExecutor
+
 def update_year():
     session = SessionFactory()
     
@@ -68,16 +69,17 @@ def update_year():
     finally:
         session.close()
 
-def call_llm(prompt: str):
-    client = genai.Client(api_key = LLM_KEY)
-
+def call_llm(self, prompt: str):
+        
     try:
+        client = genai.Client(vertexai=True, project="project-06786059-977e-4238-b0f", location="asia-northeast3")
+            
         response = client.models.generate_content(
-            model='gemini-3-flash-preview', 
-            contents=prompt
-        )
+                model="gemini-2.5-flash", 
+                contents=prompt
+            )
         return response.text.strip()
-    
+        
     except Exception as e:
         return f"에러가 발생했습니다: {str(e)}"
     
