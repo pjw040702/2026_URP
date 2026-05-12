@@ -26,6 +26,7 @@ from schema.response import LikedActiviteisResponse, RecommendActivitiesResponse
 CURRENT_DATE = datetime.date.today()
 
 from concurrent.futures import ThreadPoolExecutor
+from google.oauth2 import service_account
 
 class RecommendationRepository:
     def __init__(self, session: Session = Depends(get_db)):
@@ -49,10 +50,12 @@ class RecommendationRepository:
                 return "에러: GCP_CREDENTIALS 환경 변수가 설정되지 않았습니다."
 
             creds_info = json.loads(creds_json)
+            credentials = service_account.Credentials.from_service_account_info(creds_info)
             client = Client(
                 vertexai=True, 
                 project=creds_info.get("project_id"), 
-                location="asia-northeast3"
+                location="asia-northeast3",
+                credentials=credentials
             )
 
             response = client.models.generate_content(

@@ -15,7 +15,7 @@ from dotenv import load_dotenv
 
 load_dotenv(Path(__file__).resolve().parents[2] / ".env")
 from concurrent.futures import ThreadPoolExecutor
-
+from google.oauth2 import service_account
 def update_year():
     session = SessionFactory()
     
@@ -76,10 +76,12 @@ def call_llm(prompt: str):
             return "에러: GCP_CREDENTIALS 환경 변수가 설정되지 않았습니다."
 
         creds_info = json.loads(creds_json)
+        credentials = service_account.Credentials.from_service_account_info(creds_info)
         client = Client(
             vertexai=True, 
             project=creds_info.get("project_id"), 
-            location="asia-northeast3"
+            location="asia-northeast3",
+            credentials=credentials
         )
 
         response = client.models.generate_content(
