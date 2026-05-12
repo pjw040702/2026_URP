@@ -1,7 +1,6 @@
-from typing import List
 
-from sqlalchemy import select, delete
-from fastapi import Depends, FastAPI, HTTPException
+from sqlalchemy import select
+from fastapi import Depends
 from sqlalchemy.orm import Session
 
 from database.connection import get_db
