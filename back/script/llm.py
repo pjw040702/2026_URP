@@ -9,11 +9,11 @@ sys.path.append(os.path.dirname(os.path.abspath(os.path.dirname(__file__))))
 from database.connection import SessionFactory  # 이미 만들어둔 설정 재사용
 from database.orm import Activity              # ORM 모델
 
-import google.genai as genai
+from google.genai import Client
+import json
 from dotenv import load_dotenv
 
 load_dotenv(Path(__file__).resolve().parents[2] / ".env")
-LLM_KEY = os.getenv("LLM_KEY")
 from concurrent.futures import ThreadPoolExecutor
 
 def update_year():
@@ -68,18 +68,29 @@ def update_year():
     finally:
         session.close()
 
-def call_llm(self, prompt: str):
-        
+def call_llm(prompt: str):
     try:
-        client = genai.Client(vertexai=True, project="project-06786059-977e-4238-b0f", location="asia-northeast3")
-            
-        response = client.models.generate_content(
-                model="gemini-2.5-flash", 
-                contents=prompt
-            )
-        return response.text.strip()
+        creds_json = os.environ.get("GCP_CREDENTIALS")
         
+        if not creds_json:
+            return "에러: GCP_CREDENTIALS 환경 변수가 설정되지 않았습니다."
+
+        creds_info = json.loads(creds_json)
+        client = Client(
+            vertexai=True, 
+            project=creds_info.get("project_id"), 
+            location="asia-northeast3"
+        )
+
+        response = client.models.generate_content(
+            model="gemini-2.5-flash", 
+            contents=prompt
+        )
+        
+        return response.text.strip()
     except Exception as e:
+        # 상세 에러 확인을 위해 로그 출력 추가 권장
+        print(f"Vertex AI Error: {e}")
         return f"에러가 발생했습니다: {str(e)}"
     
 if __name__ == "__main__":
