@@ -9,7 +9,6 @@ const Sidebar = () => {
   const [userStatus, setUserStatus] = useState({
     hasPastActivities: false,
     hasTestResult: false,
-    hasPreference: !!localStorage.getItem('hasPreference'),
     hasRecommendation: !!localStorage.getItem('hasRecommendation'),
   });
 
@@ -34,7 +33,6 @@ const Sidebar = () => {
       setUserStatus({
         hasTestResult: !!userData.has_test_result,
         hasPastActivities: hasActualPast,
-        hasPreference: !!localStorage.getItem('hasPreference'),
         hasRecommendation: !!localStorage.getItem('hasRecommendation'),
       });
     }).catch(err => console.error('Status fetch error:', err));
@@ -90,7 +88,7 @@ const Sidebar = () => {
       <nav className="sidebar-nav">
         <div className={`nav-group ${location.pathname === "/past-activities" ? "active" : ""} ${userStatus.hasPastActivities ? "completed" : ""}`}>
           <div className="step-indicator">
-            {userStatus.hasPastActivities ? "↺" : "1"}
+            {userStatus.hasPastActivities ? "✓" : "1"}
           </div>
           <a
             href="/past-activities"
@@ -104,7 +102,7 @@ const Sidebar = () => {
 
         <div className={`nav-group ${location.pathname === "/test" ? "active" : ""} ${userStatus.hasTestResult ? "completed" : ""}`}>
           <div className="step-indicator">
-            {userStatus.hasTestResult ? "↺" : "2"}
+            {userStatus.hasTestResult ? "✓" : "2"}
           </div>
           <a
             href="/test"
@@ -116,30 +114,16 @@ const Sidebar = () => {
           </a>
         </div>
 
-        <div className={`nav-group ${location.pathname === "/preference" ? "active" : ""} ${isStep3Disabled ? "disabled" : ""} ${!isStep3Disabled && userStatus.hasPreference ? "completed" : ""}`}>
-          <div className="step-indicator">
-            {!isStep3Disabled && userStatus.hasPreference ? "↺" : "3"}
-          </div>
-          <a
-            href="/preference"
-            className="nav-item"
-            onClick={(e) => handleNavClick("/preference", e, isStep3Disabled, step3Msg)}
-          >
-            <span className="step-label">STEP 03</span>
-            <span className="nav-label">선호 문장 입력</span>
-          </a>
-        </div>
-
         <div className={`nav-group ${location.pathname === "/recommend" ? "active" : ""} ${isStep3Disabled ? "disabled" : ""} ${!isStep3Disabled && userStatus.hasRecommendation ? "completed" : ""}`}>
           <div className="step-indicator">
-            {!isStep3Disabled && userStatus.hasRecommendation ? "↺" : "4"}
+            {!isStep3Disabled && userStatus.hasRecommendation ? "✓" : "3"}
           </div>
           <a
             href="/recommend"
             className="nav-item"
             onClick={(e) => handleNavClick("/recommend", e, isStep3Disabled, step3Msg)}
           >
-            <span className="step-label">STEP 04</span>
+            <span className="step-label">STEP 03</span>
             <span className="nav-label">활동 추천</span>
           </a>
         </div>

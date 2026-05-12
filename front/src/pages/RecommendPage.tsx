@@ -14,9 +14,10 @@ interface Recommendation {
   liked: boolean;
 }
 
-const RecommendPage = ({ forceInputView = false }: { forceInputView?: boolean }) => {
+const RecommendPage = () => {
   const navigate = useNavigate();
   const [isRecommended, setIsRecommended] = useState(false);
+  const [isReInput, setIsReInput] = useState(false);
   const [preferredSentence, setPreferredSentence] = useState('');
   const [recommendations, setRecommendations] = useState<Recommendation[]>([]);
   const [likedIds, setLikedIds] = useState<number[]>([]);
@@ -28,15 +29,8 @@ const RecommendPage = ({ forceInputView = false }: { forceInputView?: boolean })
 
   const keywords = [
     '인공지능(AI)', '데이터 분석', '반도체', '코딩', '자율주행',
-    '기초과학연구', '바이오/제약', '신소재/에너지', '건축', '인턴/현장실습',
-    '공모전', '경진대회', '학술연구', '창업준비', '진로탐색', 'etc'
+    '바이오/제약', '신소재/에너지', '인턴/현장실습', '공모전/경진대회', 'etc'
   ];
-
-  useEffect(() => {
-    if (forceInputView) {
-      setIsRecommended(false);
-    }
-  }, [forceInputView]);
 
   useEffect(() => {
     // 추천 결과가 나왔을 때만 내비게이션 경고를 활성화하기 위한 전역 플래그
@@ -67,10 +61,6 @@ const RecommendPage = ({ forceInputView = false }: { forceInputView?: boolean })
     );
   };
 
-  const handleBack = () => {
-    navigate('/preference');
-  };
-
   const handleRecommend = async () => {
     if (preferredSentence.trim().length < 5) {
       alert('관심 있는 활동이나 목표를 최소 5자 이상 적어주세요.');
@@ -89,9 +79,6 @@ const RecommendPage = ({ forceInputView = false }: { forceInputView?: boolean })
       setLikedIds(data.filter((r: Recommendation) => r.liked).map((r: Recommendation) => r.activity_id));
       localStorage.setItem('hasRecommendation', 'true');
       setIsRecommended(true);
-      if (forceInputView) {
-        navigate('/recommend', { state: { recommendations: data, preferredSentence, likedIds: data.filter((r: Recommendation) => r.liked).map((r: Recommendation) => r.activity_id) } });
-      }
     } catch (e) {
       console.error(e);
       alert('추천 중 오류가 발생했습니다.');
@@ -102,16 +89,17 @@ const RecommendPage = ({ forceInputView = false }: { forceInputView?: boolean })
 
   const location = useLocation();
   useEffect(() => {
-    if (location.state?.recommendations && !forceInputView) {
+    if (location.state?.recommendations) {
       setRecommendations(location.state.recommendations);
       setPreferredSentence(location.state.preferredSentence);
       setLikedIds(location.state.likedIds);
       setIsRecommended(true);
     }
-  }, [location.state, forceInputView]);
+  }, [location.state]);
 
   const handleReRecommend = () => {
     setIsRecommended(false);
+    setIsReInput(true);
   };
 
   const handleRoadmapClick = () => {
@@ -128,13 +116,13 @@ const RecommendPage = ({ forceInputView = false }: { forceInputView?: boolean })
     return (
       <div className="recommend-page">
         {isLoading && <Loading />}
-        <div className="recommend-header">
+        <div className="recommend-header recommend-header-compact">
           <h2>맞춤 활동 추천</h2>
           <p className="recommend-subtitle">관심 있는 활동이나 목표를 아래의 예시 키워드를 참고하여 적어주세요.</p>
         </div>
 
         <div className="input-section">
-          <div className="keyword-container">
+          <div className="keyword-container keyword-container-two-rows">
             {keywords.map((keyword, index) => (
               <div key={index} className="keyword-bubble">{keyword}</div>
             ))}
@@ -152,24 +140,24 @@ const RecommendPage = ({ forceInputView = false }: { forceInputView?: boolean })
               <div className="char-count">{preferredSentence.length}/200</div>
             </div>
 
-            <div className="weight-control-container">
+            <div className={`weight-control-container ${!isReInput ? 'weight-control-disabled' : ''}`}>
               <h3 className="weight-control-title">반영 비율 조정</h3>
               <div className="weight-sliders">
                 <div className="weight-slider-item">
                   <label>선호 문장</label>
-                  <input type="range" min="1" max="100" value={prefWeight}
+                  <input type="range" min="1" max="100" value={prefWeight} disabled={!isReInput}
                     onChange={(e) => setPrefWeight(Number(e.target.value))} />
                   <span className="weight-value">{prefWeight}</span>
                 </div>
                 <div className="weight-slider-item">
                   <label>과거 활동</label>
-                  <input type="range" min="1" max="100" value={activityWeight}
+                  <input type="range" min="1" max="100" value={activityWeight} disabled={!isReInput}
                     onChange={(e) => setActivityWeight(Number(e.target.value))} />
                   <span className="weight-value">{activityWeight}</span>
                 </div>
                 <div className="weight-slider-item">
                   <label>유형 결과</label>
-                  <input type="range" min="1" max="100" value={typeWeight}
+                  <input type="range" min="1" max="100" value={typeWeight} disabled={!isReInput}
                     onChange={(e) => setTypeWeight(Number(e.target.value))} />
                   <span className="weight-value">{typeWeight}</span>
                 </div>
@@ -189,7 +177,6 @@ const RecommendPage = ({ forceInputView = false }: { forceInputView?: boolean })
     <div className="recommend-page">
       {isLoading && <Loading />}
       <div className="recommend-header">
-        <button className="back-btn" onClick={handleBack}>← 다시 입력하기</button>
         <h2>맞춤 활동 추천 결과</h2>
 
         <div className="weight-control-container weight-control-disabled">

@@ -43,7 +43,7 @@ const AppContent = () => {
             
             {/* Protected Routes */}
             <Route path="/test" element={<ProtectedRoute><CareerTest /></ProtectedRoute>} />
-            <Route path="/preference" element={<ProtectedRoute><RecommendPage forceInputView={true} /></ProtectedRoute>} />
+            <Route path="/preference" element={<Navigate to="/recommend" replace />} />
             <Route path="/recommend" element={<ProtectedRoute><RecommendPage /></ProtectedRoute>} />
             <Route path="/roadmap" element={<ProtectedRoute><RoadmapPage /></ProtectedRoute>} />
             <Route path="/past-activities" element={<ProtectedRoute><PastActivitiesPage /></ProtectedRoute>} />

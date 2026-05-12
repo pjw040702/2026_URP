@@ -1,13 +1,17 @@
 .recommend-page {
-  padding: 40px 20px;
+  padding: 10px 20px 40px;
   max-width: 1200px;
   margin: 0 auto;
   min-height: calc(100vh - 70px);
 }
 
 .recommend-header {
-  margin-bottom: 30px;
+  margin-bottom: 20px;
   text-align: center;
+}
+
+.recommend-header-compact {
+  margin-bottom: 10px;
 }
 
 .recommend-header h2 {
@@ -36,6 +40,11 @@
   flex-wrap: wrap;
   justify-content: center;
   gap: 15px;
+}
+
+.keyword-container-two-rows {
+  max-height: 110px;
+  overflow: hidden;
 }
 
 .keyword-bubble {
