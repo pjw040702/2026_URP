@@ -42,7 +42,7 @@ const RoadmapPage = () => {
   return (
     <div className="roadmap-page">
       <div className="roadmap-header">
-        <h2>나만의 커리어 로드맵</h2>
+        <h2>나의 활동 장바구니</h2>
         {schoolYear && (
           <div className="current-grade-badge">현재 학년: {schoolYear}학년</div>
         )}

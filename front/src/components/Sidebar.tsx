@@ -7,7 +7,7 @@ const Sidebar = () => {
   const navigate = useNavigate();
   const location = useLocation();
   const [userStatus, setUserStatus] = useState({
-    hasPastActivities: false,
+    hasPastActivities: !!localStorage.getItem('skippedActivities'),
     hasTestResult: false,
     hasRecommendation: !!localStorage.getItem('hasRecommendation'),
   });
@@ -32,7 +32,7 @@ const Sidebar = () => {
 
       setUserStatus({
         hasTestResult: !!userData.has_test_result,
-        hasPastActivities: hasActualPast,
+        hasPastActivities: hasActualPast || !!localStorage.getItem('skippedActivities'),
         hasRecommendation: !!localStorage.getItem('hasRecommendation'),
       });
     }).catch(err => console.error('Status fetch error:', err));

@@ -1,4 +1,5 @@
 import { useState, useMemo, useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { api } from '../api';
 import Loading from '../components/Loading';
 import './PastActivitiesPage.css';
@@ -10,6 +11,7 @@ interface Activity {
 }
 
 const PastActivitiesPage = () => {
+  const navigate = useNavigate();
   const [allActivities, setAllActivities] = useState<Activity[]>([]);
   const [searchQuery, setSearchQuery] = useState('');
   const [selectedGrade, setSelectedGrade] = useState(1);
@@ -78,6 +80,12 @@ const PastActivitiesPage = () => {
     }));
   };
 
+  const handleSkip = () => {
+    localStorage.setItem('skippedActivities', 'true');
+    window.dispatchEvent(new CustomEvent('activitiesSaved'));
+    navigate('/test');
+  };
+
   const handleSave = async () => {
     await api.post('/users/me/past-activities', {
       grade1: gradeActivities[1].map(a => a.activity_id),
@@ -142,6 +150,9 @@ const PastActivitiesPage = () => {
             <div className="save-action-area">
               <button className="final-save-btn" onClick={handleSave}>
                 전체 활동 저장하기
+              </button>
+              <button className="skip-activities-btn" onClick={handleSkip}>
+                활동 없음 (다음 단계로)
               </button>
             </div>
           </div>

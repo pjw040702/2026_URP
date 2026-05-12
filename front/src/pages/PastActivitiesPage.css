@@ -313,7 +313,8 @@
 
 .save-action-area {
   display: flex;
-  justify-content: center;
+  flex-direction: column;
+  gap: 10px;
 }
 
 .final-save-btn {
@@ -331,6 +332,24 @@
 
 .final-save-btn:hover {
   background: #0f172a;
+}
+
+.skip-activities-btn {
+  width: 100%;
+  padding: 12px;
+  background: transparent;
+  color: #94a3b8;
+  border: 1px solid #e2e8f0;
+  border-radius: 12px;
+  font-size: 0.9rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.skip-activities-btn:hover {
+  background: #f1f5f9;
+  color: #64748b;
 }
 
 .no-results {

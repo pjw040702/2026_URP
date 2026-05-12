@@ -61,7 +61,7 @@ const SignupPage = () => {
     <div className="auth-container centered-page">
       {isLoading && <Loading />}
       <div className="auth-box large-auth-box">
-        <h1 className="auth-title">QUANTUM</h1>
+        <h1 className="auth-title">스꾸터</h1>
         <h2 className="auth-subtitle">회원가입</h2>
 
         <form onSubmit={handleSignup} className="auth-form">

@@ -36,7 +36,7 @@ const LoginPage = () => {
     <div className="auth-container centered-page">
       {isLoading && <Loading />}
       <div className="auth-box">
-        <h1 className="auth-title">QUANTUM</h1>
+        <h1 className="auth-title">스꾸터</h1>
         <h2 className="auth-subtitle">LOGIN</h2>
 
         <form onSubmit={handleLogin} className="auth-form">
