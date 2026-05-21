@@ -146,6 +146,11 @@ const RecommendPage = () => {
             </div>
 
             <div className={`weight-control-container ${!isReInput ? 'weight-control-disabled' : ''}`}>
+              {!isReInput && (
+                <p style={{ fontSize: '12px', color: '#94a3b8', marginBottom: '8px', textAlign: 'center' }}>
+                  반영비율은 재추천부터 조절가능합니다
+                </p>
+              )}
               <h3 className="weight-control-title">반영 비율 조정</h3>
               <div className="weight-sliders">
                 <div className="weight-slider-item">
