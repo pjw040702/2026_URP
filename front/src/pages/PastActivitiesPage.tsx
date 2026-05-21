@@ -20,12 +20,18 @@ const PastActivitiesPage = () => {
     1: [], 2: [], 3: [], 4: [],
   });
   const [loading, setLoading] = useState(true);
+  const [currentGrade, setCurrentGrade] = useState(4);
 
   useEffect(() => {
     Promise.all([
       api.get('/activities'),
       api.get('/users/me/past-activities'),
-    ]).then(([activitiesData, pastData]: [Activity[], { grade1: number[] | null, grade2: number[] | null, grade3: number[] | null, grade4: number[] | null }]) => {
+      api.get('/users/me'),
+    ]).then(([activitiesData, pastData, userData]: [Activity[], { grade1: number[] | null, grade2: number[] | null, grade3: number[] | null, grade4: number[] | null }, { school_year: number }]) => {
+      if (userData?.school_year) {
+        setCurrentGrade(userData.school_year);
+        setSelectedGrade(1);
+      }
       setAllActivities(activitiesData);
 
       if (pastData) {
@@ -105,7 +111,7 @@ const PastActivitiesPage = () => {
         <div className="left-section">
           <div className="section-header">
             <div className="grade-selector">
-              {[1, 2, 3, 4].map(grade => (
+              {[1, 2, 3, 4].filter(grade => grade <= currentGrade).map(grade => (
                 <button
                   key={grade}
                   className={`grade-btn ${selectedGrade === grade ? 'active' : ''}`}

@@ -63,6 +63,13 @@ const TypeBarChart = ({ scores }: { scores: number[] }) => {
               </rect>
               <text
                 x={x + barWidth / 2}
+                y={y > 14 ? y - 4 : y + 12}
+                style={{ fontSize: '9px', fontWeight: '600', fill: y > 14 ? '#3b82f6' : 'white', textAnchor: 'middle' }}
+              >
+                {d.value > 0 ? d.value.toExponential(1) : '0'}
+              </text>
+              <text
+                x={x + barWidth / 2}
                 y={chartHeight + 30}
                 className="bar-label-text"
                 style={{ fontSize: '11px', fontWeight: '500', fill: '#64748b', textAnchor: 'middle' }}

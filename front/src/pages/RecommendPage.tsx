@@ -124,7 +124,12 @@ const RecommendPage = () => {
         <div className="input-section">
           <div className="keyword-container keyword-container-two-rows">
             {keywords.map((keyword, index) => (
-              <div key={index} className="keyword-bubble">{keyword}</div>
+              <div
+                key={index}
+                className="keyword-bubble"
+                style={{ cursor: 'pointer' }}
+                onClick={() => setPreferredSentence(prev => prev ? `${prev} ${keyword}` : keyword)}
+              >{keyword}</div>
             ))}
           </div>
 
