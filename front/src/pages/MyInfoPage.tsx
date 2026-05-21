@@ -40,17 +40,15 @@ const TypeBarChart = ({ scores }: { scores: number[] }) => {
     <div className="type-chart-container" style={{ width: '100%', overflowX: 'auto' }}>
       <svg width={chartWidth} height={chartHeight + 40} style={{ display: 'block', margin: '0 auto' }}>
         {data.map((d, i) => {
-          // 모든 항목이 바 그래프로 보이게 하기 위한 시각적 스케일링
-          // 0이 아닌 값은 아주 작더라도 최소 10px 이상의 높이를 가지도록 함
           let barHeight = 0;
+          let displayScore = 0;
           if (d.value > 0) {
-            // 로그 스케일 적용하여 극도로 작은 값(1e-18)과 큰 값(1)을 모두 한 화면에 표시
-            // -18승 근처의 값들도 약 15~20px 정도의 높이를 갖게 됨
-            const logVal = Math.max(Math.log10(d.value), -18); 
-            const normalizedLog = (logVal + 18) / 18; 
+            const logVal = Math.max(Math.log10(d.value), -18);
+            const normalizedLog = (logVal + 18) / 18;
             barHeight = 10 + (normalizedLog * (chartHeight - 10));
+            displayScore = Math.round(normalizedLog * 100);
           }
-          
+
           const x = gap + i * (barWidth + gap);
           const y = chartHeight - barHeight;
 
@@ -73,9 +71,15 @@ const TypeBarChart = ({ scores }: { scores: number[] }) => {
                 fill="#3b82f6"
                 rx={6}
               >
-                <title>{`${d.label}: ${d.value.toExponential(4)}`}</title>
+                <title>{`${d.label}: ${displayScore}`}</title>
               </rect>
-              {/* 숫자는 제거하고 바 그래프만 노출 */}
+              <text
+                x={x + barWidth / 2}
+                y={y > 14 ? y - 4 : y + 12}
+                style={{ fontSize: '9px', fontWeight: '600', fill: y > 14 ? '#3b82f6' : 'white', textAnchor: 'middle' }}
+              >
+                {displayScore}
+              </text>
               <text
                 x={x + barWidth / 2}
                 y={chartHeight + 25}

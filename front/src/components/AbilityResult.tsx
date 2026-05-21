@@ -31,12 +31,14 @@ const TypeBarChart = ({ scores }: { scores: number[] }) => {
       <svg width={chartWidth} height={chartHeight + 50} style={{ display: 'block', margin: '0 auto' }}>
         {data.map((d, i) => {
           let barHeight = 0;
+          let displayScore = 0;
           if (d.value > 0) {
-            const logVal = Math.max(Math.log10(d.value), -18); 
-            const normalizedLog = (logVal + 18) / 18; 
+            const logVal = Math.max(Math.log10(d.value), -18);
+            const normalizedLog = (logVal + 18) / 18;
             barHeight = 10 + (normalizedLog * (chartHeight - 10));
+            displayScore = Math.round(normalizedLog * 100);
           }
-          
+
           const x = gap + i * (barWidth + gap);
           const y = chartHeight - barHeight;
 
@@ -59,14 +61,14 @@ const TypeBarChart = ({ scores }: { scores: number[] }) => {
                 fill="#3b82f6"
                 rx={8}
               >
-                <title>{`${d.label}: ${d.value.toExponential(4)}`}</title>
+                <title>{`${d.label}: ${displayScore}`}</title>
               </rect>
               <text
                 x={x + barWidth / 2}
                 y={y > 14 ? y - 4 : y + 12}
                 style={{ fontSize: '9px', fontWeight: '600', fill: y > 14 ? '#3b82f6' : 'white', textAnchor: 'middle' }}
               >
-                {d.value > 0 ? d.value.toExponential(1) : '0'}
+                {displayScore}
               </text>
               <text
                 x={x + barWidth / 2}
